@@ -34,6 +34,8 @@ if echo "$COMMIT_MSG" | grep -q "$PATTERN"; then
 else
     echo "Commit Message is Invalid! $COMMIT_MSG" >&2
     echo "Your commit message must begin with one of the following"
+    echo "wheare **** is JIRA Number"
+    echo " "
     echo "  refactor(feature/****): ..."
     echo "  style(feature/****): ..."
     echo "  build(feature/****): ..."
@@ -43,15 +45,5 @@ else
     echo "  docs(docs-change): ..."
     echo "  test(test/****): ..."
     echo "  fix(fix/****): ..."
-    echo " "
-    echo "Wheare **** is JIRA Number"
     exit 1
 fi
-
-#if [[ "$COMMIT_MSG" =~ ^($PATTERN)$ ]]; then
-#    exit 0
-#else
-#    echo "Invalid commit message format."
-#    exit 1
-#fi
-#
