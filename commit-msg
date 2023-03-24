@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# An example hook script to check the commit log message.
+# Called by "git commit" with one argument, the name of the file
+# that has the commit message.  The hook should exit with non-zero
+# status after issuing an appropriate message if it wants to stop the
+# commit.  The hook is allowed to edit the commit message file.
+#
+# To enable this hook, rename this file to "commit-msg".
+
+# Uncomment the below to add a Signed-off-by line to the message.
+# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
+# hook is more suited to it.
+#
+# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+
+# This example catches duplicate Signed-off-by lines.
+
+COMMIT_MSG_FILE=$1
+echo $COMMIT_MSG_FILE
+
+COMMIT_MSG=$(cat $COMMIT_MSG_FILE | tr -d '\n')
+
+
+PATTERN="\b(?:build\(\w+\/\d+\)\: |chore\(\w+\/\d+\)\: |feat\(feature\/\d+\)\: |fix\(\w+\/\d+\)\: |docs\(\w+\/\d+\)\: |refactor\(\w+\/\d+\)\: |perf\(\w+\/\d+\)\: |style\(\w+\/\d+\)\: |test\(\w+\/\d+\)\: )\b"
+
+
+
+# Check if the commit message matches the pattern
+if echo "$COMMIT_MSG" | grep -q "$PATTERN"; then
+    echo "Found PATTERN in commit message: $COMMIT_MSG" >&2
+    exit 0
+else
+    echo "Commit Message is Invalid! $COMMIT_MSG" >&2
+    echo "Your commit message must begin with one of the following"
+    echo "  refactor(feature/****): ..."
+    echo "  style(feature/****): ..."
+    echo "  build(feature/****): ..."
+    echo "  chore(feature/****): ..."
+    echo "  feat(feature/****): ..."
+    echo "  perf(feature/****): ..."
+    echo "  docs(docs-change): ..."
+    echo "  test(test/****): ..."
+    echo "  fix(fix/****): ..."
+    echo " "
+    echo "Wheare **** is JIRA Number"
+    exit 1
+fi
+
+#if [[ "$COMMIT_MSG" =~ ^($PATTERN)$ ]]; then
+#    exit 0
+#else
+#    echo "Invalid commit message format."
+#    exit 1
+#fi
+#
