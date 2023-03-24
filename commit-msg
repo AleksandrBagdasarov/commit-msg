@@ -23,27 +23,27 @@ echo $COMMIT_MSG_FILE
 COMMIT_MSG=$(cat $COMMIT_MSG_FILE | tr -d '\n')
 
 
-PATTERN="\b(?:build\(\w+\/\d+\)\: |chore\(\w+\/\d+\)\: |feat\(feature\/\d+\)\: |fix\(\w+\/\d+\)\: |docs\(\w+\/\d+\)\: |refactor\(\w+\/\d+\)\: |perf\(\w+\/\d+\)\: |style\(\w+\/\d+\)\: |test\(\w+\/\d+\)\: )\b"
-
+PATTERN="test\(\test\/[0-9]+\): |fix\(\fix\/[0-9]+\): |feat\(\feat\/[0-9]+\): |fix\(\feat\/[0-9]+\): |build: |docs: )"
 
 
 # Check if the commit message matches the pattern
-if echo "$COMMIT_MSG" | grep -q "$PATTERN"; then
+if echo "$COMMIT_MSG" | grep -E "$PATTERN"; then
     echo "Found PATTERN in commit message: $COMMIT_MSG" >&2
     exit 0
 else
-    echo "Commit Message is Invalid! $COMMIT_MSG" >&2
-    echo "Your commit message must begin with one of the following"
-    echo "wheare **** is JIRA Number"
+    echo "Your Commit Message: $COMMIT_MSG" >&2
+    echo "Is Invalid!"
+    echo "Commit message must begin with one of the following"
     echo " "
-    echo "  refactor(feature/****): ..."
-    echo "  style(feature/****): ..."
-    echo "  build(feature/****): ..."
-    echo "  chore(feature/****): ..."
-    echo "  feat(feature/****): ..."
-    echo "  perf(feature/****): ..."
-    echo "  docs(docs-change): ..."
-    echo "  test(test/****): ..."
+    echo "  fix(feature/****): ..."
     echo "  fix(fix/****): ..."
+    echo " "
+    echo "  feat(feat/****): ..."
+    echo " "
+    echo "  test(test/****): ..."
+    echo " "
+    echo "  build: ..."
+    echo "  docs: ..."
+    echo " "
     exit 1
 fi
